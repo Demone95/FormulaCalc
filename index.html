@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FormulaCalc</title>
+<style>
+body{margin:0;background:#121212;color:#fff;font-family:Arial}
+.wrap{max-width:420px;margin:auto;padding:20px}
+.card{background:#1f1f1f;padding:18px;border-radius:14px}
+input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #444;background:#2a2a2a;color:#fff}
+.out{margin-top:12px;padding:12px;background:#2b2b2b;border-radius:8px;font-size:18px}
+small{color:#bbb}
+</style></head><body><div class=wrap><div class=card>
+<h2>🧪 FormulaCalc</h2>
+<small>Calcolo automatico</small>
+<input id=lotto type=number placeholder="Kg lotto">
+<input id=k1000 type=number placeholder="Kg ogni 1000">
+<input id=agg type=number placeholder="Kg aggiunti">
+<div class=out id=out>Inserisci i valori…</div>
+</div></div>
+<script>
+const ids=['lotto','k1000','agg'];ids.forEach(i=>document.getElementById(i).addEventListener('input',calc));
+function v(id){return parseFloat(document.getElementById(id).value)}
+function calc(){
+ let l=v('lotto'),k=v('k1000'),a=v('agg'),t='';
+ if(l>0 && !isNaN(k)){t+='Da aggiungere: <b>'+((l/1000)*k).toFixed(2)+' kg</b><br>';}
+ if(l>0 && !isNaN(a)){t+='Percentuale: <b>'+((a/l)*100).toFixed(3)+'%</b><br>Kg/1000: <b>'+((a/l)*1000).toFixed(2)+'</b>';}
+ out.innerHTML=t||'Inserisci i valori…';
+}
+</script></body></html>
