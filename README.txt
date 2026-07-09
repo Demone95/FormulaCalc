@@ -1,1 +1,1 @@
-Sono state aggiunte solo le nuove icone FormulaPro. Sostituisci index.html e carica anche manifest.json e i tre file icon.
+Modificata solo la barra superiore iPhone per usare lo stesso sfondo scuro dell'app.
