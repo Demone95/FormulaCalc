@@ -1,1 +1,1 @@
-Correzione v2.2.1: il Reset della scheda Fine formulazione cancella solo la scheda corrente senza cambiarla.
+Solo modifiche richieste: FormulaPro, Fine formulazione prima, pausa sabato 06:00-lunedì 06:00.
