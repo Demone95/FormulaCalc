@@ -1,1 +1,1 @@
-Solo modifiche richieste: FormulaPro, Fine formulazione prima, pausa sabato 06:00-lunedì 06:00.
+Sono state aggiunte solo le nuove icone FormulaPro. Sostituisci index.html e carica anche manifest.json e i tre file icon.
