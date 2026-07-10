@@ -1,1 +1,1 @@
-FormulaPro v2.4
+Correzione v2.4.1: salvataggio e visualizzazione della cronologia corretti. Nessun altra modifica.
