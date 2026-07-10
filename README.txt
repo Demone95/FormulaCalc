@@ -1,1 +1,1 @@
-Modificata solo la barra superiore iPhone per usare lo stesso sfondo scuro dell'app.
+FormulaPro v2.4
