@@ -1,1 +1,32 @@
-const q=i=>document.getElementById(i),v=i=>+q(i).value,fmt=n=>n.toLocaleString('it-IT',{maximumFractionDigits:2});function tab(t){q('d').hidden=t!='d';q('f').hidden=t!='f'}function calc(){let A=v('a'),B=v('b'),C=v('c');q('od').innerHTML=(A&&B?'Kg da aggiungere: <b>'+fmt(A*B/1000)+' kg</b><br>':'')+(A&&C?'Percentuale: <b>'+fmt(C/A*100)+'%</b><br>Kg/1000: <b>'+fmt(C/A*1000)+'</b>':'');let X=v('x'),Y=v('y'),Z=v('z');if(X&&Y){let r=Math.max(0,X-Z),h=r/Y,p=Math.min(100,Z/X*100),e=new Date(Date.now()+h*36e5);q('bar').style.width=p+'%';q('of').innerHTML='Kg rimanenti: <b>'+fmt(r)+' kg</b><br>Completato: <b>'+fmt(p)+'%</b><br>Tempo: <b>'+Math.floor(h)+' h '+Math.round(h%1*60)+' min</b><br>Fine prevista: <b>'+e.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})+'</b>'}}document.querySelectorAll('input').forEach(i=>i.oninput=calc);function resetD(){['a','b','c'].forEach(i=>q(i).value='');calc()}function resetF(){['x','y','z'].forEach(i=>q(i).value='');q('bar').style.width=0;q('of').innerHTML=''}
+document.querySelectorAll('input').forEach(x => x.oninput = calc);
+
+document.addEventListener('click', function (e) {
+  if (resultToInsert === null) return;
+  if (e.target.matches('input[type="number"]')) {
+    e.target.value = String(resultToInsert).replace('.', ',');
+    e.target.classList.remove('pickTarget');
+    document.querySelectorAll('input.pickTarget').forEach(x => x.classList.remove('pickTarget'));
+    $('pickMsg').classList.remove('on');
+    resultToInsert = null;
+    calc();
+  }
+}, true);
+
+document.addEventListener('pointerdown', function (e) {
+  const el = e.target.closest('button,input,select');
+  if (!el) return;
+  el.classList.add('touchFx');
+  setTimeout(() => el.classList.remove('touchFx'), 160);
+}, { passive: true });
+
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function (e) {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) e.preventDefault();
+  lastTouchEnd = now;
+}, { passive: false });
+
+document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
+
+setNow();
+calc();
