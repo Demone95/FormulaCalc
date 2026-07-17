@@ -34,8 +34,8 @@ function saveF() {
       'Kg da formulare: ' + fmt(v('kt')),
       'Portata: ' + fmt(v('po')) + ' kg/h',
       'Kg formulati: ' + fmt(isNaN(v('fa')) ? 0 : v('fa')),
-      'Kg per batch: ' + (isNaN(v('kb')) ? 'â€”' : fmt(v('kb')) + ' kg'),
-      'Data di partenza: ' + ($('dataPartenza').value ? new Date($('dataPartenza').value + 'T00:00:00').toLocaleDateString('it-IT') : 'â€”'),
+      'Kg per batch: ' + (isNaN(v('kb')) ? '—' : fmt(v('kb')) + ' kg'),
+      'Data di partenza: ' + ($('dataPartenza').value ? new Date($('dataPartenza').value + 'T00:00:00').toLocaleDateString('it-IT') : '—'),
       'Ora di partenza: ' + $('ora').value,
       'Fine prevista: ' + $('fp').textContent
     ]
@@ -51,7 +51,7 @@ function saveD() {
       'Kg formulati: ' + fmt(v('kf')),
       'Dosaggio: ' + fmt(v('km')) + ' kg/1000',
       'Kg da aggiungere: ' + $('r1').textContent,
-      'Kg aggiunti: ' + (isNaN(v('ka')) ? 'â€”' : fmt(v('ka')) + ' kg')
+      'Kg aggiunti: ' + (isNaN(v('ka')) ? '—' : fmt(v('ka')) + ' kg')
     ]
   });
 }

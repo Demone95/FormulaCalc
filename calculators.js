@@ -37,9 +37,9 @@ function fineLavorativa(inizio, minuti) {
 
 function calc() {
   const f = v('kf'), m = v('km'), a = v('ka');
-  $('r1').textContent = f > 0 && !isNaN(m) ? fmt(f * m / 1000) + ' kg' : 'â€”';
-  $('r2').textContent = f > 0 && !isNaN(a) ? fmt(a / f * 100, 3) + ' %' : 'â€”';
-  $('r3').textContent = f > 0 && !isNaN(a) ? fmt(a / f * 1000) + ' kg' : 'â€”';
+  $('r1').textContent = f > 0 && !isNaN(m) ? fmt(f * m / 1000) + ' kg' : '—';
+  $('r2').textContent = f > 0 && !isNaN(a) ? fmt(a / f * 100, 3) + ' %' : '—';
+  $('r3').textContent = f > 0 && !isNaN(a) ? fmt(a / f * 1000) + ' kg' : '—';
 
   const t = v('kt'), p = v('po');
   let q = v('fa');
@@ -52,7 +52,7 @@ function calc() {
     $('rr').textContent = fmt(r) + ' kg';
     $('pc').textContent = fmt(per, 1) + ' %';
     $('tr').textContent = Math.floor(min / 60) + ' h ' + min % 60 + ' min';
-    $('fp').textContent = e.toLocaleDateString('it-IT') + ' Â· ' + e.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+    $('fp').textContent = e.toLocaleDateString('it-IT') + ' · ' + e.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
     $('bar').style.width = per + '%';
     $('bt').textContent = fmt(per, 0) + '%';
   }
@@ -65,10 +65,10 @@ function resetD() {
 
 function resetF() {
   ['kt', 'po', 'fa'].forEach(x => $(x).value = '');
-  $('rr').textContent = 'â€”';
-  $('pc').textContent = 'â€”';
-  $('tr').textContent = 'â€”';
-  $('fp').textContent = 'â€”';
+  $('rr').textContent = '—';
+  $('pc').textContent = '—';
+  $('tr').textContent = '—';
+  $('fp').textContent = '—';
   $('bar').style.width = '0%';
   $('bt').textContent = '0%';
 }
@@ -82,6 +82,7 @@ function setNow() {
 function useCurrentTime() {
   setNow();
   calc();
+  calcBatch();
 }
 
 function startDate() {

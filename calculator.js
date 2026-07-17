@@ -2,7 +2,7 @@ let cv = '0', aa = null, oo = null, nw = true, ex = '';
 let resultToInsert = null;
 
 function sym(x) {
-  return x === '/' ? 'Ã·' : x === '*' ? 'Ã—' : x === '-' ? 'âˆ’' : '+';
+  return x === '/' ? '÷' : x === '*' ? '×' : x === '-' ? '−' : '+';
 }
 
 function sh() {
