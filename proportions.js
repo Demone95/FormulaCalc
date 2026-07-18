@@ -45,6 +45,14 @@ function calcolaProporzioneUniversale(event) {
     vuoti = [indiceProporzioneCalcolato];
   }
 
+  if (vuoti.length === 1 && vuoti[0] === editedIndice) {
+    // L'utente sta svuotando proprio il campo su cui sta scrivendo:
+    // lasciamolo vuoto invece di ricalcolarlo subito, altrimenti non
+    // riuscirebbe mai a cancellarlo del tutto.
+    messaggio.textContent = '';
+    return null;
+  }
+
   if (vuoti.length !== 1) {
     if (vuoti.length > 1) messaggio.textContent = 'Compila tre valori per calcolare il quarto.';
     else messaggio.textContent = '';
