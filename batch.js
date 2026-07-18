@@ -32,12 +32,15 @@ function calcBatch() {
   const batchCompleti = Math.floor(kgProducibili / kgPerBatch);
   const residuo = kgProducibili - batchCompleti * kgPerBatch;
   const ultimoParziale = residuo > 0.000001 ? residuo : 0;
+  const ultimoBatchCompletamento = ultimoParziale ? calcolaTempoLavorativo(inizio, Math.round(kgProducibili / portata * 60)) : null;
+  const ultimoBatchData = ultimoBatchCompletamento ? ultimoBatchCompletamento.toLocaleDateString('it-IT') : null;
+  const ultimoBatchOra = ultimoBatchCompletamento ? ultimoBatchCompletamento.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : null;
 
   $('tempoDisp').textContent = formattaTempo(minuti);
   $('kgProd').textContent = fmt(kgProducibili) + ' kg';
   $('batchComp').textContent = String(batchCompleti);
   $('ultimoBatch').textContent = ultimoParziale ? fmt(ultimoParziale) + ' kg (parziale)' : '\u2014';
-  batchPlan = { inizio, limite, portata, kgPerBatch, minuti, kgProducibili, batchCompleti, ultimoParziale };
+  batchPlan = { inizio, limite, portata, kgPerBatch, minuti, kgProducibili, batchCompleti, ultimoParziale, ultimoBatchCompletamento, ultimoBatchData, ultimoBatchOra };
 }
 
 function fineBatch(kg) {
@@ -58,7 +61,7 @@ function openBatchDetails() {
     righe.push('<div class="histItem"><b>Batch ' + i + '</b><p>' + fmt(batchPlan.kgPerBatch) + ' kg</p><small>Completamento: ' + formatoDataOra(fineBatch(cumulativi)) + '</small></div>');
   }
   if (batchPlan.ultimoParziale) {
-    righe.push('<div class="histItem batchPartial"><b>Ultimo batch parziale</b><p>' + fmt(batchPlan.ultimoParziale) + ' kg</p><small>Completamento: ' + formatoDataOra(fineBatch(batchPlan.kgProducibili)) + '</small></div>');
+    righe.push('<div class="histItem batchPartial"><b>Ultimo batch parziale</b><p>' + fmt(batchPlan.ultimoParziale) + ' kg</p><small>Completamento: ' + formatoDataOra(batchPlan.ultimoBatchCompletamento) + '</small></div>');
   }
 
   $('batchDetails').innerHTML = '<p class="batchSummary">Tempo disponibile: <b>' + formattaTempo(batchPlan.minuti) + '</b><br>Kg producibili: <b>' + fmt(batchPlan.kgProducibili) + ' kg</b></p>' + (righe.length ? righe.join('') : '<p class="batchEmpty">Nessun batch completabile nel periodo selezionato.</p>');
