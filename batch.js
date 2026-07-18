@@ -20,9 +20,44 @@ function formattaTempo(minuti) {
 function calcBatch() {
   const portata = v('portataBatch'), kgPerBatch = v('kb');
   const inizio = dataOraBatch('dataPartenzaBatch', 'oraBatch');
-  const limite = dataOraBatch('dataFine', 'oraFine');
+  const numeroBatchTesto = $('numBatch').value.trim();
+  const numeroBatch = numeroBatchTesto !== '' ? parseInt(numeroBatchTesto, 10) : null;
 
-  if (!(portata > 0 && kgPerBatch > 0 && inizio && limite && !isNaN(inizio) && !isNaN(limite) && limite > inizio)) {
+  if (!(portata > 0 && kgPerBatch > 0 && inizio && !isNaN(inizio))) {
+    resetBatchResults();
+    return;
+  }
+
+  if (numeroBatch && numeroBatch > 0) {
+    // Modalità: l'utente indica quanti batch vuole fare, calcoliamo quando finiranno.
+    const kgProducibili = numeroBatch * kgPerBatch;
+    const minuti = Math.round(kgProducibili / portata * 60);
+    const completamento = calcolaTempoLavorativo(inizio, minuti);
+
+    $('tempoDisp').textContent = formattaTempo(minuti);
+    $('kgProd').textContent = fmt(kgProducibili) + ' kg';
+    $('batchComp').textContent = String(numeroBatch);
+    $('ultimoBatch').textContent = '\u2014';
+
+    batchPlan = {
+      inizio,
+      limite: completamento,
+      portata,
+      kgPerBatch,
+      minuti,
+      kgProducibili,
+      batchCompleti: numeroBatch,
+      ultimoParziale: 0,
+      ultimoBatchCompletamento: completamento,
+      ultimoBatchData: completamento.toLocaleDateString('it-IT'),
+      ultimoBatchOra: completamento.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })
+    };
+    return;
+  }
+
+  // Modalità esistente: l'utente indica una scadenza, calcoliamo quanti batch entrano.
+  const limite = dataOraBatch('dataFine', 'oraFine');
+  if (!(limite && !isNaN(limite) && limite > inizio)) {
     resetBatchResults();
     return;
   }
@@ -53,7 +88,7 @@ function formatoDataOra(data) {
 
 function openBatchDetails() {
   calcBatch();
-  if (!batchPlan) return alert('Inserisci data e ora di partenza e limite, portata e kg per batch validi.');
+  if (!batchPlan) return alert('Inserisci data e ora di partenza, portata e kg per batch validi, poi indica il numero di batch oppure una data/ora limite.');
 
   const righe = [];
   for (let i = 1; i <= batchPlan.batchCompleti; i++) {
@@ -64,7 +99,7 @@ function openBatchDetails() {
     righe.push('<div class="histItem batchPartial"><b>Ultimo batch parziale</b><p>' + fmt(batchPlan.ultimoParziale) + ' kg</p><small>Completamento: ' + formatoDataOra(batchPlan.ultimoBatchCompletamento) + '</small></div>');
   }
 
-  $('batchDetails').innerHTML = '<p class="batchSummary">Tempo disponibile: <b>' + formattaTempo(batchPlan.minuti) + '</b><br>Kg producibili: <b>' + fmt(batchPlan.kgProducibili) + ' kg</b></p>' + (righe.length ? righe.join('') : '<p class="batchEmpty">Nessun batch completabile nel periodo selezionato.</p>');
+  $('batchDetails').innerHTML = '<p class="batchSummary">Tempo necessario: <b>' + formattaTempo(batchPlan.minuti) + '</b><br>Kg producibili: <b>' + fmt(batchPlan.kgProducibili) + ' kg</b></p>' + (righe.length ? righe.join('') : '<p class="batchEmpty">Nessun batch completabile nel periodo selezionato.</p>');
   $('batchModal').classList.add('on');
 }
 
@@ -80,13 +115,13 @@ function useCurrentTimeBatch() {
 }
 
 function resetBatch() {
-  ['portataBatch', 'kb', 'dataPartenzaBatch', 'oraBatch', 'dataFine', 'oraFine'].forEach(id => $(id).value = '');
+  ['portataBatch', 'kb', 'dataPartenzaBatch', 'oraBatch', 'numBatch', 'dataFine', 'oraFine'].forEach(id => $(id).value = '');
   resetBatchResults();
   closeBatchDetails();
 }
 
 function initializeBatch() {
-  ['portataBatch', 'kb', 'dataPartenzaBatch', 'oraBatch', 'dataFine', 'oraFine'].forEach(id => $(id).addEventListener('input', calcBatch));
+  ['portataBatch', 'kb', 'dataPartenzaBatch', 'oraBatch', 'numBatch', 'dataFine', 'oraFine'].forEach(id => $(id).addEventListener('input', calcBatch));
   $('btnBatch').addEventListener('click', openBatchDetails);
   calcBatch();
 }
