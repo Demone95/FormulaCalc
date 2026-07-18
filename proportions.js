@@ -42,10 +42,10 @@ function calcolaProporzioneUniversale() {
 
   const indice = vuoti[0];
   let risultato;
-  if (indice === 0) risultato = valori[1] * valori[3] / valori[2];
-  if (indice === 1) risultato = valori[0] * valori[2] / valori[3];
-  if (indice === 2) risultato = valori[1] * valori[3] / valori[0];
-  if (indice === 3) risultato = valori[0] * valori[2] / valori[1];
+  if (indice === 0) risultato = valori[1] * valori[2] / valori[3];
+  if (indice === 1) risultato = valori[0] * valori[3] / valori[2];
+  if (indice === 2) risultato = valori[0] * valori[3] / valori[1];
+  if (indice === 3) risultato = valori[1] * valori[2] / valori[0];
 
   if (!Number.isFinite(risultato)) {
     messaggio.textContent = 'Il valore divisore non può essere zero.';
