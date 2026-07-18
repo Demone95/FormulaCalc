@@ -14,7 +14,7 @@ document.addEventListener('click', function (e) {
 
 document.addEventListener('pointerdown', function (e) {
   const el = e.target.closest('button,input,select');
-  if (!el) return;
+  if (!el || el.classList.contains('tab')) return;
   el.classList.add('touchFx');
   setTimeout(() => el.classList.remove('touchFx'), 160);
 }, { passive: true });
