@@ -53,8 +53,6 @@ function calc() {
     $('pc').textContent = fmt(per, 1) + ' %';
     $('tr').textContent = Math.floor(min / 60) + ' h ' + min % 60 + ' min';
     $('fp').textContent = e.toLocaleDateString('it-IT') + ' · ' + e.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-    $('bar').style.width = per + '%';
-    $('bt').textContent = fmt(per, 0) + '%';
   }
 }
 
@@ -64,13 +62,11 @@ function resetD() {
 }
 
 function resetF() {
-  ['kt', 'po', 'fa'].forEach(x => $(x).value = '');
+  ['kt', 'po', 'fa', 'dataPartenza', 'ora'].forEach(x => $(x).value = '');
   $('rr').textContent = '—';
   $('pc').textContent = '—';
   $('tr').textContent = '—';
   $('fp').textContent = '—';
-  $('bar').style.width = '0%';
-  $('bt').textContent = '0%';
 }
 
 function setNow() {

@@ -43,6 +43,7 @@ function cl() {
 function bk() {
   if (nw) return;
   cv = cv.length > 1 ? cv.slice(0, -1) : '0';
+  nw = cv === '0';
   if (oo) ex = String(aa).replace('.', ',') + ' ' + sym(oo) + ' ' + cv.replace('.', ',');
   sh();
 }
