@@ -37,7 +37,7 @@ function calcBatch() {
     $('tempoDisp').textContent = formattaTempo(minuti);
     $('kgProd').textContent = fmt(kgProducibili) + ' kg';
     $('batchComp').textContent = String(numeroBatch);
-    $('ultimoBatch').textContent = '\u2014';
+    $('ultimoBatch').textContent = formatoDataOra(completamento);
 
     batchPlan = {
       inizio,
