@@ -23,10 +23,27 @@ function formattaProporzione(numero) {
   return numero.toLocaleString('it-IT', { maximumFractionDigits: 2 });
 }
 
-function calcolaProporzioneUniversale() {
-  const campi = ['propA', 'propB', 'propC', 'propD'].map($);
-  const vuoti = campi.map((campo, indice) => campo.value.trim() === '' ? indice : null).filter(indice => indice !== null);
+function calcolaProporzioneUniversale(event) {
+  const ids = ['propA', 'propB', 'propC', 'propD'];
+  const campi = ids.map($);
   const messaggio = $('proportionMessage');
+  const editedId = event && event.target ? event.target.id : null;
+  const editedIndice = ids.indexOf(editedId);
+
+  let vuoti = campi.map((campo, indice) => campo.value.trim() === '' ? indice : null).filter(indice => indice !== null);
+
+  if (vuoti.length === 0 && indiceProporzioneCalcolato !== null) {
+    if (editedIndice === indiceProporzioneCalcolato) {
+      // L'utente ha modificato manualmente il campo calcolato in precedenza:
+      // accettiamo il nuovo valore e smettiamo di ricalcolarlo automaticamente.
+      indiceProporzioneCalcolato = null;
+      messaggio.textContent = '';
+      return null;
+    }
+    // L'utente ha cambiato uno degli altri tre campi: continuiamo a ricalcolare
+    // il campo che avevamo calcolato l'ultima volta, anche se ora è "pieno".
+    vuoti = [indiceProporzioneCalcolato];
+  }
 
   if (vuoti.length !== 1) {
     if (vuoti.length > 1) messaggio.textContent = 'Compila tre valori per calcolare il quarto.';
