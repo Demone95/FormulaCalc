@@ -55,3 +55,10 @@ body.light .proportionMessage{color:#64748b}
 body.light .proportionMessage.error{color:#dc2626}
 body.light .proportionSeparator,body.light .proportionEquals{color:#334155}
 body.light .themeBtn{background:linear-gradient(145deg,#e2e8f0,#cbd5e1);border-color:#94a3b855;box-shadow:0 0 10px #94a3b855}
+
+.loginOverlay{display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;background:#07101f;padding:20px}
+.loginOverlay.on{display:flex}
+.loginBox{width:100%;max-width:360px;background:#ffffff0d;border:1px solid #ffffff16;border-radius:18px;padding:20px}
+.loginBox h2{margin:0 0 6px;text-align:center}
+body.light .loginOverlay{background:#f4f6fb}
+body.light .loginBox{background:#ffffff;border:1px solid #0000001a;box-shadow:0 1px 4px #00000014}
