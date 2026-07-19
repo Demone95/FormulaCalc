@@ -41,15 +41,20 @@
   }
 
   function eseguiLogout() {
+    if (!confirm('Sicuro di voler uscire?')) return;
     firebase.auth().signOut();
   }
 
   firebase.auth().onAuthStateChanged(function (utente) {
     const ov = overlay();
+    const loading = document.getElementById('loginLoading');
+    const box = document.getElementById('loginBox');
     if (!ov) return;
     if (utente) {
       ov.classList.remove('on');
     } else {
+      if (loading) loading.style.display = 'none';
+      if (box) box.style.display = 'block';
       ov.classList.add('on');
       if (inputPass()) inputPass().value = '';
     }

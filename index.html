@@ -18,7 +18,8 @@
 </head>
 <body>
   <div id="loginOverlay" class="loginOverlay on">
-    <div class="loginBox">
+    <div id="loginLoading" class="loginLoading">🧪</div>
+    <div class="loginBox" id="loginBox" style="display:none">
       <h2>🔒 Accesso FormulaPro</h2>
       <label>Nome utente<input id="loginUser" type="text" autocomplete="username" autocapitalize="none" enterkeyhint="next"></label>
       <label>Password<input id="loginPass" type="password" autocomplete="current-password" enterkeyhint="done"></label>
