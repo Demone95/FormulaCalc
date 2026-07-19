@@ -52,6 +52,8 @@
     if (!ov) return;
     if (utente) {
       ov.classList.remove('on');
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      window.scrollTo(0, 0);
     } else {
       if (loading) loading.style.display = 'none';
       if (box) box.style.display = 'block';
