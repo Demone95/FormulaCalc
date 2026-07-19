@@ -101,6 +101,8 @@ function saveProportion() {
   addHistory({
     type: 'Proporzioni',
     date: new Date().toLocaleString('it-IT'),
+    tabId: 'p',
+    campi: { propA: valori[0], propB: valori[1], propC: valori[2], propD: valori[3] },
     rows: [
       'Proporzione: ' + valori[0] + ' : ' + valori[1] + ' = ' + valori[2] + ' : ' + valori[3],
       'Valore calcolato: ' + etichette[indiceProporzioneCalcolato] + ' = ' + valori[indiceProporzioneCalcolato]

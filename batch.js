@@ -18,18 +18,40 @@ function formattaTempo(minuti) {
 }
 
 function calcBatch() {
+  const portataTesto = $('portataBatch').value.trim();
+  const kgPerBatchTesto = $('kb').value.trim();
   const portata = v('portataBatch'), kgPerBatch = v('kb');
   const inizio = dataOraBatch('dataPartenzaBatch', 'oraBatch');
   const numeroBatchTesto = $('numBatch').value.trim();
   const numeroBatch = numeroBatchTesto !== '' ? parseInt(numeroBatchTesto, 10) : null;
+  const messaggio = $('batchMessage');
+  const setMessaggio = testo => { if (messaggio) messaggio.textContent = testo; };
+
+  if (portataTesto !== '' && !(portata > 0)) {
+    setMessaggio('La portata deve essere maggiore di zero.');
+    resetBatchResults();
+    return;
+  }
+  if (kgPerBatchTesto !== '' && !(kgPerBatch > 0)) {
+    setMessaggio('I kg per batch devono essere maggiori di zero.');
+    resetBatchResults();
+    return;
+  }
+  if (numeroBatchTesto !== '' && !(numeroBatch > 0)) {
+    setMessaggio('Il numero di batch deve essere un intero maggiore di zero.');
+    resetBatchResults();
+    return;
+  }
 
   if (!(portata > 0 && kgPerBatch > 0 && inizio && !isNaN(inizio))) {
+    setMessaggio('');
     resetBatchResults();
     return;
   }
 
   if (numeroBatch && numeroBatch > 0) {
     // Modalità: l'utente indica quanti batch vuole fare, calcoliamo quando finiranno.
+    setMessaggio('');
     const kgProducibili = numeroBatch * kgPerBatch;
     const minuti = Math.round(kgProducibili / portata * 60);
     const completamento = calcolaTempoLavorativo(inizio, minuti);
@@ -56,12 +78,20 @@ function calcBatch() {
   }
 
   // Modalità esistente: l'utente indica una scadenza, calcoliamo quanti batch entrano.
+  const dataFineTesto = $('dataFine').value, oraFineTesto = $('oraFine').value;
   const limite = dataOraBatch('dataFine', 'oraFine');
+  if (dataFineTesto && oraFineTesto && !(limite && !isNaN(limite) && limite > inizio)) {
+    setMessaggio('La data/ora limite deve essere successiva alla partenza.');
+    resetBatchResults();
+    return;
+  }
   if (!(limite && !isNaN(limite) && limite > inizio)) {
+    setMessaggio('');
     resetBatchResults();
     return;
   }
 
+  setMessaggio('');
   const minuti = calcolaTempoLavorativo(inizio, limite);
   const kgProducibili = portata * minuti / 60;
   const batchCompleti = Math.floor(kgProducibili / kgPerBatch);
@@ -116,6 +146,7 @@ function useCurrentTimeBatch() {
 
 function resetBatch() {
   ['portataBatch', 'kb', 'dataPartenzaBatch', 'oraBatch', 'numBatch', 'dataFine', 'oraFine'].forEach(id => $(id).value = '');
+  if ($('batchMessage')) $('batchMessage').textContent = '';
   resetBatchResults();
   closeBatchDetails();
 }

@@ -1,3 +1,22 @@
+(function () {
+  const temaSalvato = localStorage.getItem('formulaProTema');
+  if (temaSalvato === 'light') {
+    document.body.classList.add('light');
+    document.documentElement.classList.add('light');
+  }
+  const btnTema = $('themeBtn');
+  if (btnTema) btnTema.textContent = temaSalvato === 'light' ? '☀️' : '🌙';
+})();
+
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  document.documentElement.classList.toggle('light');
+  const chiaro = document.body.classList.contains('light');
+  localStorage.setItem('formulaProTema', chiaro ? 'light' : 'dark');
+  const btnTema = $('themeBtn');
+  if (btnTema) btnTema.textContent = chiaro ? '☀️' : '🌙';
+}
+
 document.querySelectorAll('input').forEach(x => x.oninput = calc);
 
 document.addEventListener('click', function (e) {

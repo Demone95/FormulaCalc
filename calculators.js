@@ -4,14 +4,38 @@ function tab(id, b) {
   b.classList.add('on');
 }
 
+function switchTab(id) {
+  document.querySelectorAll('.page,.tab').forEach(x => x.classList.remove('on'));
+  const pagina = $(id);
+  if (pagina) pagina.classList.add('on');
+  document.querySelectorAll('.tab').forEach(btn => {
+    const onclickAttr = btn.getAttribute('onclick') || '';
+    if (onclickAttr.indexOf("'" + id + "'") !== -1) btn.classList.add('on');
+  });
+}
+
 function calc() {
   const f = v('kf'), m = v('km'), a = v('ka');
+  const msgD = $('dosaggioMessage');
+  if (msgD) {
+    if ($('kf').value.trim() !== '' && !(f > 0)) msgD.textContent = 'Inserisci kg formulati maggiori di zero.';
+    else if ($('km').value.trim() !== '' && !(m >= 0)) msgD.textContent = 'Il dosaggio non può essere negativo.';
+    else if ($('ka').value.trim() !== '' && !(a >= 0)) msgD.textContent = 'I kg aggiunti non possono essere negativi.';
+    else msgD.textContent = '';
+  }
   $('r1').textContent = f > 0 && !isNaN(m) ? fmt(f * m / 1000) + ' kg' : '—';
   $('r2').textContent = f > 0 && !isNaN(a) ? fmt(a / f * 100, 3) + ' %' : '—';
   $('r3').textContent = f > 0 && !isNaN(a) ? fmt(a / f * 1000) + ' kg' : '—';
 
   const t = v('kt'), p = v('po');
   let q = v('fa');
+  const msgF = $('formulazioneMessage');
+  if (msgF) {
+    if ($('kt').value.trim() !== '' && !(t > 0)) msgF.textContent = 'Inserisci kg da formulare maggiori di zero.';
+    else if ($('po').value.trim() !== '' && !(p > 0)) msgF.textContent = 'La portata deve essere maggiore di zero.';
+    else if ($('fa').value.trim() !== '' && !(q >= 0)) msgF.textContent = 'I kg formulati non possono essere negativi.';
+    else msgF.textContent = '';
+  }
   if (t > 0 && p > 0) {
     q = isNaN(q) ? 0 : q;
     const r = Math.max(0, t - q);
@@ -27,6 +51,7 @@ function calc() {
 
 function resetD() {
   ['kf', 'km', 'ka'].forEach(x => $(x).value = '');
+  if ($('dosaggioMessage')) $('dosaggioMessage').textContent = '';
   calc();
 }
 
@@ -36,6 +61,7 @@ function resetF() {
   $('pc').textContent = '—';
   $('tr').textContent = '—';
   $('fp').textContent = '—';
+  if ($('formulazioneMessage')) $('formulazioneMessage').textContent = '';
 }
 
 function setNow() {
