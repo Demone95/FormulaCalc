@@ -19,6 +19,25 @@ function toggleTheme() {
 
 document.querySelectorAll('input').forEach(x => x.oninput = calc);
 
+// Navigazione tra i campi: premendo "Avanti" sulla tastiera si passa al campo successivo.
+const ordineCampi = {
+  kf: 'km', km: 'ka',
+  kt: 'po', po: 'fa',
+  portataBatch: 'kb', kb: 'dataPartenzaBatch', numBatch: null,
+  propA: 'propB', propB: 'propC', propC: 'propD'
+};
+
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Enter') return;
+  const id = e.target.id;
+  if (!(id in ordineCampi)) return;
+  e.preventDefault();
+  const prossimoId = ordineCampi[id];
+  const prossimo = prossimoId ? $(prossimoId) : null;
+  if (prossimo) prossimo.focus();
+  else e.target.blur();
+});
+
 document.addEventListener('click', function (e) {
   if (resultToInsert === null) return;
   if (e.target.matches('input[type="number"]')) {
