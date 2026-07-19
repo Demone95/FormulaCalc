@@ -18,10 +18,10 @@ function calc() {
   const f = v('kf'), m = v('km'), a = v('ka');
   const msgD = $('dosaggioMessage');
   if (msgD) {
-    if ($('kf').value.trim() !== '' && !(f > 0)) msgD.textContent = 'Inserisci kg formulati maggiori di zero.';
-    else if ($('km').value.trim() !== '' && !(m >= 0)) msgD.textContent = 'Il dosaggio non può essere negativo.';
-    else if ($('ka').value.trim() !== '' && !(a >= 0)) msgD.textContent = 'I kg aggiunti non possono essere negativi.';
-    else msgD.textContent = '';
+    if ($('kf').value.trim() !== '' && !(f > 0)) { msgD.textContent = 'Inserisci kg formulati maggiori di zero.'; msgD.classList.add('error'); }
+    else if ($('km').value.trim() !== '' && !(m >= 0)) { msgD.textContent = 'Il dosaggio non può essere negativo.'; msgD.classList.add('error'); }
+    else if ($('ka').value.trim() !== '' && !(a >= 0)) { msgD.textContent = 'I kg aggiunti non possono essere negativi.'; msgD.classList.add('error'); }
+    else { msgD.textContent = ''; msgD.classList.remove('error'); }
   }
   $('r1').textContent = f > 0 && !isNaN(m) ? fmt(f * m / 1000) + ' kg' : '—';
   $('r2').textContent = f > 0 && !isNaN(a) ? fmt(a / f * 100, 3) + ' %' : '—';
@@ -31,10 +31,10 @@ function calc() {
   let q = v('fa');
   const msgF = $('formulazioneMessage');
   if (msgF) {
-    if ($('kt').value.trim() !== '' && !(t > 0)) msgF.textContent = 'Inserisci kg da formulare maggiori di zero.';
-    else if ($('po').value.trim() !== '' && !(p > 0)) msgF.textContent = 'La portata deve essere maggiore di zero.';
-    else if ($('fa').value.trim() !== '' && !(q >= 0)) msgF.textContent = 'I kg formulati non possono essere negativi.';
-    else msgF.textContent = '';
+    if ($('kt').value.trim() !== '' && !(t > 0)) { msgF.textContent = 'Inserisci kg da formulare maggiori di zero.'; msgF.classList.add('error'); }
+    else if ($('po').value.trim() !== '' && !(p > 0)) { msgF.textContent = 'La portata deve essere maggiore di zero.'; msgF.classList.add('error'); }
+    else if ($('fa').value.trim() !== '' && !(q >= 0)) { msgF.textContent = 'I kg formulati non possono essere negativi.'; msgF.classList.add('error'); }
+    else { msgF.textContent = ''; msgF.classList.remove('error'); }
   }
   if (t > 0 && p > 0) {
     q = isNaN(q) ? 0 : q;

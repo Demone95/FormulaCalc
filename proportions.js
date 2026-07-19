@@ -38,6 +38,7 @@ function calcolaProporzioneUniversale(event) {
       // accettiamo il nuovo valore e smettiamo di ricalcolarlo automaticamente.
       indiceProporzioneCalcolato = null;
       messaggio.textContent = '';
+      messaggio.classList.remove('error');
       return null;
     }
     // L'utente ha cambiato uno degli altri tre campi: continuiamo a ricalcolare
@@ -50,18 +51,21 @@ function calcolaProporzioneUniversale(event) {
     // lasciamolo vuoto invece di ricalcolarlo subito, altrimenti non
     // riuscirebbe mai a cancellarlo del tutto.
     messaggio.textContent = '';
+    messaggio.classList.remove('error');
     return null;
   }
 
   if (vuoti.length !== 1) {
     if (vuoti.length > 1) messaggio.textContent = 'Compila tre valori per calcolare il quarto.';
     else messaggio.textContent = '';
+    messaggio.classList.remove('error');
     return null;
   }
 
   const valori = campi.map(campo => valoreProporzione(campo.value));
   if (valori.some((valore, indice) => indice !== vuoti[0] && !Number.isFinite(valore))) {
     messaggio.textContent = 'Inserisci valori numerici validi.';
+    messaggio.classList.add('error');
     return null;
   }
 
@@ -74,12 +78,14 @@ function calcolaProporzioneUniversale(event) {
 
   if (!Number.isFinite(risultato)) {
     messaggio.textContent = 'Il valore divisore non può essere zero.';
+    messaggio.classList.add('error');
     return null;
   }
 
   campi[indice].value = formattaProporzione(risultato);
   indiceProporzioneCalcolato = indice;
   messaggio.textContent = '';
+  messaggio.classList.remove('error');
   return indice;
 }
 

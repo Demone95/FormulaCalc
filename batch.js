@@ -25,7 +25,7 @@ function calcBatch() {
   const numeroBatchTesto = $('numBatch').value.trim();
   const numeroBatch = numeroBatchTesto !== '' ? parseInt(numeroBatchTesto, 10) : null;
   const messaggio = $('batchMessage');
-  const setMessaggio = testo => { if (messaggio) messaggio.textContent = testo; };
+  const setMessaggio = testo => { if (messaggio) { messaggio.textContent = testo; messaggio.classList.toggle('error', testo !== ''); } };
 
   if (portataTesto !== '' && !(portata > 0)) {
     setMessaggio('La portata deve essere maggiore di zero.');
