@@ -9,6 +9,7 @@
     measurementId: "G-RKLX0MP8GB"
   };
   firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
 
   function overlay() { return document.getElementById('loginOverlay'); }
   function inputUser() { return document.getElementById('loginUser'); }
@@ -42,6 +43,7 @@
 
   function eseguiLogout() {
     if (!confirm('Sicuro di voler uscire?')) return;
+    firebase.analytics().logEvent('logout');
     firebase.auth().signOut();
   }
 
@@ -54,6 +56,7 @@
       ov.classList.remove('on');
       if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
       window.scrollTo(0, 0);
+      firebase.analytics().logEvent('login', { method: 'email' });
     } else {
       if (loading) loading.style.display = 'none';
       if (box) box.style.display = 'block';
