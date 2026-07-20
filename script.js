@@ -5,7 +5,10 @@
     document.documentElement.classList.add('light');
   }
   const btnTema = $('themeBtn');
-  if (btnTema) btnTema.textContent = temaSalvato === 'light' ? '☀️' : '🌙';
+  const labelTema = $('themeLabel');
+  const chiaro = temaSalvato === 'light';
+  if (btnTema) btnTema.textContent = chiaro ? '☀️' : '🌙';
+  if (labelTema) labelTema.textContent = chiaro ? 'Modalità giorno' : 'Modalità notte';
 })();
 
 function toggleTheme() {
@@ -14,7 +17,9 @@ function toggleTheme() {
   const chiaro = document.body.classList.contains('light');
   localStorage.setItem('formulaProTema', chiaro ? 'light' : 'dark');
   const btnTema = $('themeBtn');
+  const labelTema = $('themeLabel');
   if (btnTema) btnTema.textContent = chiaro ? '☀️' : '🌙';
+  if (labelTema) labelTema.textContent = chiaro ? 'Modalità giorno' : 'Modalità notte';
 }
 
 document.querySelectorAll('input').forEach(x => x.oninput = calc);
