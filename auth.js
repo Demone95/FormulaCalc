@@ -9,6 +9,7 @@
     measurementId: "G-RKLX0MP8GB"
   };
   firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
   firebase.analytics();
 
   function overlay() { return document.getElementById('loginOverlay'); }
@@ -32,19 +33,47 @@
     mostraErrore('');
     const bottone = bottoneEl();
     if (bottone) bottone.disabled = true;
-    firebase.auth().signInWithEmailAndPassword(nomeUtente + '@formulapro.local', password)
-      .catch(function () {
-        mostraErrore('Nome utente o password non corretti.');
-      })
-      .finally(function () {
+    
+    // Controlla se esiste una sessione attiva per questo utente
+    db.collection('sessions').doc(nomeUtente).get().then(function(doc) {
+      if (doc.exists) {
+        mostraErrore('Questo account è già in uso su un altro dispositivo.');
         if (bottone) bottone.disabled = false;
-      });
+        return;
+      }
+      
+      // Nessuna sessione attiva, procedi con il login
+      firebase.auth().signInWithEmailAndPassword(nomeUtente + '@formulapro.local', password)
+        .catch(function () {
+          mostraErrore('Nome utente o password non corretti.');
+        })
+        .finally(function () {
+          if (bottone) bottone.disabled = false;
+        });
+    }).catch(function(error) {
+      mostraErrore('Errore nel controllo della sessione.');
+      if (bottone) bottone.disabled = false;
+    });
   }
 
   function eseguiLogout() {
     if (!confirm('Sicuro di voler uscire?')) return;
-    firebase.analytics().logEvent('logout');
-    firebase.auth().signOut();
+    
+    const utente = firebase.auth().currentUser;
+    if (utente) {
+      // Estrai il nome utente dalla email
+      const nomeUtente = utente.email.split('@')[0];
+      // Cancella la sessione da Firestore
+      db.collection('sessions').doc(nomeUtente).delete().then(function() {
+        firebase.analytics().logEvent('logout');
+        firebase.auth().signOut();
+      }).catch(function(error) {
+        firebase.analytics().logEvent('logout');
+        firebase.auth().signOut();
+      });
+    } else {
+      firebase.auth().signOut();
+    }
   }
 
   firebase.auth().onAuthStateChanged(function (utente) {
@@ -53,10 +82,24 @@
     const box = document.getElementById('loginBox');
     if (!ov) return;
     if (utente) {
-      ov.classList.remove('on');
-      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-      window.scrollTo(0, 0);
-      firebase.analytics().logEvent('login', { method: 'email' });
+      // Estrai il nome utente dalla email
+      const nomeUtente = utente.email.split('@')[0];
+      // Crea la sessione in Firestore
+      db.collection('sessions').doc(nomeUtente).set({
+        email: utente.email,
+        loginTime: new Date(),
+        deviceId: 'device-' + Math.random().toString(36).substr(2, 9)
+      }).then(function() {
+        ov.classList.remove('on');
+        if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+        window.scrollTo(0, 0);
+        firebase.analytics().logEvent('login', { method: 'email' });
+      }).catch(function(error) {
+        console.error('Errore nella creazione della sessione:', error);
+        ov.classList.remove('on');
+        if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+        window.scrollTo(0, 0);
+      });
     } else {
       if (loading) loading.style.display = 'none';
       if (box) box.style.display = 'block';
