@@ -12,6 +12,8 @@
   const db = firebase.firestore();
   firebase.analytics();
 
+  let loginManuale = false;
+
   function overlay() { return document.getElementById('loginOverlay'); }
   function inputUser() { return document.getElementById('loginUser'); }
   function inputPass() { return document.getElementById('loginPass'); }
@@ -21,6 +23,13 @@
   function mostraErrore(testo) {
     const el = erroreEl();
     if (el) el.textContent = testo;
+  }
+
+  function mostraApp() {
+    const ov = overlay();
+    if (ov) ov.classList.remove('on');
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    window.scrollTo(0, 0);
   }
 
   function eseguiLogin() {
@@ -33,41 +42,50 @@
     mostraErrore('');
     const bottone = bottoneEl();
     if (bottone) bottone.disabled = true;
-    
-    // Controlla se esiste una sessione attiva per questo utente
-    db.collection('sessions').doc(nomeUtente).get().then(function(doc) {
-      if (doc.exists) {
-        mostraErrore('Questo account è già in uso su un altro dispositivo.');
-        if (bottone) bottone.disabled = false;
-        return;
-      }
-      
-      // Nessuna sessione attiva, procedi con il login
-      firebase.auth().signInWithEmailAndPassword(nomeUtente + '@formulapro.local', password)
-        .catch(function () {
-          mostraErrore('Nome utente o password non corretti.');
-        })
-        .finally(function () {
-          if (bottone) bottone.disabled = false;
+    loginManuale = true;
+
+    firebase.auth().signInWithEmailAndPassword(nomeUtente + '@formulapro.local', password)
+      .then(function (credenziali) {
+        const utente = credenziali.user;
+        const docRef = db.collection('sessions').doc(nomeUtente);
+        return docRef.get().then(function (doc) {
+          if (doc.exists) {
+            return firebase.auth().signOut().then(function () {
+              const errore = new Error('sessione già attiva');
+              errore.codiceCustom = 'session-in-use';
+              throw errore;
+            });
+          }
+          return docRef.set({ email: utente.email, loginTime: new Date() });
         });
-    }).catch(function(error) {
-      mostraErrore('Errore nel controllo della sessione.');
-      if (bottone) bottone.disabled = false;
-    });
+      })
+      .then(function () {
+        mostraApp();
+        firebase.analytics().logEvent('login', { method: 'email' });
+      })
+      .catch(function (err) {
+        if (err && err.codiceCustom === 'session-in-use') {
+          mostraErrore('Questo account è già in uso su un altro dispositivo.');
+        } else {
+          mostraErrore('Nome utente o password non corretti.');
+        }
+      })
+      .finally(function () {
+        loginManuale = false;
+        if (bottone) bottone.disabled = false;
+      });
   }
 
   function eseguiLogout() {
     if (!confirm('Sicuro di voler uscire?')) return;
-    
+
     const utente = firebase.auth().currentUser;
     if (utente) {
-      // Estrai il nome utente dalla email
       const nomeUtente = utente.email.split('@')[0];
-      // Cancella la sessione da Firestore
-      db.collection('sessions').doc(nomeUtente).delete().then(function() {
+      db.collection('sessions').doc(nomeUtente).delete().then(function () {
         firebase.analytics().logEvent('logout');
         firebase.auth().signOut();
-      }).catch(function(error) {
+      }).catch(function () {
         firebase.analytics().logEvent('logout');
         firebase.auth().signOut();
       });
@@ -82,24 +100,11 @@
     const box = document.getElementById('loginBox');
     if (!ov) return;
     if (utente) {
-      // Estrai il nome utente dalla email
-      const nomeUtente = utente.email.split('@')[0];
-      // Crea la sessione in Firestore
-      db.collection('sessions').doc(nomeUtente).set({
-        email: utente.email,
-        loginTime: new Date(),
-        deviceId: 'device-' + Math.random().toString(36).substr(2, 9)
-      }).then(function() {
-        ov.classList.remove('on');
-        if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-        window.scrollTo(0, 0);
-        firebase.analytics().logEvent('login', { method: 'email' });
-      }).catch(function(error) {
-        console.error('Errore nella creazione della sessione:', error);
-        ov.classList.remove('on');
-        if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-        window.scrollTo(0, 0);
-      });
+      // Se il login è in corso (gestito manualmente), l'aggiornamento della UI
+      // avviene solo dopo aver verificato/creato la sessione in eseguiLogin.
+      if (!loginManuale) {
+        mostraApp();
+      }
     } else {
       if (loading) loading.style.display = 'none';
       if (box) box.style.display = 'block';
