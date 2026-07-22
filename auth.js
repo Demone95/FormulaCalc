@@ -66,8 +66,11 @@
       .catch(function (err) {
         if (err && err.codiceCustom === 'session-in-use') {
           mostraErrore('Questo account è già in uso su un altro dispositivo.');
-        } else {
+        } else if (err && err.code && err.code.indexOf('auth/') === 0) {
           mostraErrore('Nome utente o password non corretti.');
+        } else {
+          console.error('Errore login:', err);
+          mostraErrore('Errore tecnico (' + (err && err.code ? err.code : 'sconosciuto') + '). Contatta l\'amministratore.');
         }
       })
       .finally(function () {
