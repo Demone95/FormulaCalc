@@ -32,6 +32,15 @@
     window.scrollTo(0, 0);
   }
 
+  function mostraNascondiPassword() {
+    const campo = inputPass();
+    const btn = document.getElementById('togglePass');
+    if (!campo) return;
+    const nascosta = campo.type === 'password';
+    campo.type = nascosta ? 'text' : 'password';
+    if (btn) btn.textContent = nascosta ? '🙈' : '👁️';
+  }
+
   function eseguiLogin() {
     const nomeUtente = (inputUser().value || '').trim().toLowerCase();
     const password = inputPass().value || '';
@@ -129,4 +138,5 @@
 
   window.eseguiLogin = eseguiLogin;
   window.eseguiLogout = eseguiLogout;
+  window.mostraNascondiPassword = mostraNascondiPassword;
 })();

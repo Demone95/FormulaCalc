@@ -24,7 +24,7 @@
     <div class="loginBox" id="loginBox" style="display:none">
       <h2>🔒 Accesso FormulaPro</h2>
       <label>Nome utente<input id="loginUser" type="text" autocomplete="username" autocapitalize="none" enterkeyhint="next"></label>
-      <label>Password<input id="loginPass" type="password" autocomplete="current-password" enterkeyhint="done"></label>
+      <label>Password<span class="passwordWrap"><input id="loginPass" type="password" autocomplete="current-password" enterkeyhint="done"><button type="button" class="togglePass" id="togglePass" onclick="mostraNascondiPassword()" aria-label="Mostra password">👁️</button></span></label>
       <p id="loginError" class="proportionMessage error"></p>
       <button class="saveBtn" id="loginBtn" type="button" onclick="eseguiLogin()">Accedi</button>
     </div>
