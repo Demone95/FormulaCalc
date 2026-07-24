@@ -33,7 +33,7 @@
   function bottoneEl() { return document.getElementById('loginBtn'); }
   function authTitleEl() { return document.getElementById('authTitle'); }
   function authToggleEl() { return document.getElementById('authToggle'); }
-  function adminBtnEl() { return document.getElementById('adminBtn'); }
+  function adminBtnEl() { return document.getElementById('adminAction'); }
 
   function mostraErrore(testo) {
     const el = erroreEl();
