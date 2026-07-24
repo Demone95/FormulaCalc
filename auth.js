@@ -17,7 +17,7 @@
 
   // ⚠️ Sostituisci con il TUO uid Firebase di questo progetto (Authentication → Users → "User UID").
   // Solo l'account con questo uid vede il pulsante "Richieste" e può approvare/rifiutare nuovi utenti.
-  const ADMIN_UID = "INSERISCI_QUI_IL_TUO_UID";
+  const ADMIN_UID = "oLSAwMUuGLQxf6VrxR6zpRpcxzz2";
 
   let loginManuale = false;
   let modalitaAuth = 'login'; // oppure 'register'
