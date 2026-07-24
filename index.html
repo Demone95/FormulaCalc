@@ -22,11 +22,25 @@
   <div id="loginOverlay" class="loginOverlay on">
     <div id="loginLoading" class="loginLoading">🧪</div>
     <div class="loginBox" id="loginBox" style="display:none">
-      <h2>🔒 Accesso FormulaPro</h2>
+      <p class="eyebrow">ACCESSO</p>
+      <h2 id="authTitle">Accedi</h2>
       <label>Nome utente<input id="loginUser" type="text" autocomplete="username" autocapitalize="none" enterkeyhint="next"></label>
       <label>Password<span class="passwordWrap"><input id="loginPass" type="password" autocomplete="current-password" enterkeyhint="done"><button type="button" class="togglePass" id="togglePass" onclick="mostraNascondiPassword()" aria-label="Mostra password">👁️</button></span></label>
       <p id="loginError" class="proportionMessage error"></p>
-      <button class="saveBtn" id="loginBtn" type="button" onclick="eseguiLogin()">Accedi</button>
+      <button class="saveBtn" id="loginBtn" type="button" onclick="eseguiAuth()">Accedi</button>
+      <button class="saveBtn authToggle" id="authToggle" type="button" onclick="cambiaModalitaAuth()">Non hai un account? Registrati</button>
+    </div>
+    <div class="loginBox" id="pendingBox" style="display:none">
+      <p class="eyebrow">ACCESSO</p>
+      <h2>Richiesta in attesa</h2>
+      <p class="authInfo">Il tuo account è stato creato ma deve ancora essere approvato. Riprova più tardi.</p>
+      <button class="saveBtn" type="button" onclick="eseguiLogout()">🚪 Esci</button>
+    </div>
+    <div class="loginBox" id="rejectedBox" style="display:none">
+      <p class="eyebrow">ACCESSO</p>
+      <h2>Richiesta non approvata</h2>
+      <p class="authInfo">Il tuo account non è stato approvato. Contatta chi gestisce l'app.</p>
+      <button class="saveBtn" type="button" onclick="eseguiLogout()">🚪 Esci</button>
     </div>
   </div>
   <main class="app">
@@ -34,6 +48,7 @@
       <div class="iconAction"><button class="themeBtn" id="themeBtn" onclick="toggleTheme()" aria-label="Cambia tema">🌙</button><span id="themeLabel">Modalità notte</span></div>
       <div class="iconAction"><button class="calcBtn" onclick="openCalc()" aria-label="Calcolatrice"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></button><span>Calcolatrice</span></div>
       <div class="iconAction"><button class="historyBtn historyIconBtn" onclick="openHistory()" aria-label="Cronologia"><svg class="historySvg" viewBox="0 0 32 32" aria-hidden="true"><path d="M6.2 10.2A12 12 0 1 1 4 17" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M3.8 5.8v7h7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 9.5V17l5 3" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span>Cronologia</span></div>
+      <div class="iconAction"><button class="historyIconBtn adminIconBtn" id="adminBtn" style="display:none" onclick="openAdmin()" aria-label="Richieste">🗂️</button><span>Richieste</span></div>
       <div class="iconAction"><button class="logoutBtn" onclick="eseguiLogout()" aria-label="Esci"><svg class="logoutSvg" viewBox="0 0 32 32" aria-hidden="true"><rect x="6" y="8" width="8" height="16" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 14 L22 14 M20 12 L22 14 L20 16" fill="none" stroke="#ff5555" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span>Logout</span></div>
     </div></div>
     <div class="tabs"><button class="tab on" onclick="tab('f',this)">⏱️ Fine formulazione</button><button class="tab" onclick="tab('b',this)">🗓️ Pianificazione Batch</button><button class="tab" onclick="tab('p',this)">&#x2696;&#xFE0F; Proporzioni</button><button class="tab" onclick="tab('d',this)">📦 Dosaggio preservante</button></div>
@@ -45,5 +60,10 @@
   <div id="ov" class="overlay" onclick="closeHistory()"></div><aside id="drawer" class="drawer"><div class="drawerHead"><h2>Cronologia</h2><button onclick="closeHistory()">✕</button></div><div id="history"></div><button class="deleteAll" onclick="clearHistory()">Cancella tutta la cronologia</button></aside>
   <div id="cm" class="cm"><div class="cal"><div class="ch"><h2>Calcolatrice</h2><button onclick="closeCalc()">✕</button></div><div class="screen"><div id="expr" class="expr"></div><div id="result" class="result">0</div></div><div class="keys"><button class="clear" onclick="cl()">C</button><button class="util" onclick="bk()">⌫</button><button class="util" onclick="pct()">%</button><button class="op" data-op="/" onclick="opr('/')">÷</button><button onclick="dg('7')">7</button><button onclick="dg('8')">8</button><button onclick="dg('9')">9</button><button class="op" data-op="*" onclick="opr('*')">×</button><button onclick="dg('4')">4</button><button onclick="dg('5')">5</button><button onclick="dg('6')">6</button><button class="op" data-op="-" onclick="opr('-')">−</button><button onclick="dg('1')">1</button><button onclick="dg('2')">2</button><button onclick="dg('3')">3</button><button class="op" data-op="+" onclick="opr('+')">+</button><button class="zero" onclick="dg('0')">0</button><button onclick="dg('.')">,</button><button class="equal" onclick="eq()">=</button></div><button class="useResultBtn" onclick="useResult()">Usa risultato</button></div></div>
   <div id="batchModal" class="cm"><div class="cal"><div class="ch"><h2>Dettaglio Batch</h2><button onclick="closeBatchDetails()">✕</button></div><div id="batchDetails" class="batchDetails"></div></div></div><div id="pickMsg" class="pickMsg"><div>Tocca il campo in cui inserire il risultato</div><button type="button" onclick="cancelUseResult()">Annulla</button></div>
+  <div id="adminModal" class="cm"><div class="cal"><div class="ch"><h2>Richieste in attesa</h2><button onclick="closeAdmin()">✕</button></div>
+    <div id="pendingList" class="pending-list"><p class="empty-pending">Nessuna richiesta in sospeso.</p></div>
+    <h2>Rifiutati</h2>
+    <div id="rejectedList" class="pending-list"><p class="empty-pending">Nessun account rifiutato.</p></div>
+  </div></div>
 </body>
 </html>
